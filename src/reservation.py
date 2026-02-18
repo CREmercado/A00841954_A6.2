@@ -125,7 +125,7 @@ class Reservation:
         reservation = reservations[reservation_id]
         if reservation["status"] == CANCELED_STATUS:
             print(f"{ERROR_PREFIX} Reservation with ID '{reservation_id}' is already "
-                  "{CANCELED_STATUS}.")
+                  f"{CANCELED_STATUS}.")
             return False
 
         hotel_module.Hotel.cancel_room_reservation(
@@ -137,5 +137,18 @@ class Reservation:
         return True
 
     @staticmethod
-    def display_reservation():
-        pass
+    def display_reservation(reservation_id):
+        """Display reservation."""
+        reservations = _load_reservations()
+        if reservation_id not in reservations:
+            print(f"{ERROR_PREFIX} Reservation '{reservation_id}' not found.")
+            return None
+        data = reservations[reservation_id]
+        print("Reservation Information: ")
+        print(f"  - ID          : {data['reservation_id']}")
+        print(f"  - Customer ID : {data['customer_id']}")
+        print(f"  - Hotel ID    : {data['hotel_id']}")
+        print(f"  - Check-in    : {data['check_in']}")
+        print(f"  - Check-out   : {data['check_out']}")
+        print(f"  - Status      : {data['status']}")
+        return Reservation.from_dict(data)
