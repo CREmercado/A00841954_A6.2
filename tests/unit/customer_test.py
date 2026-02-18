@@ -1,5 +1,5 @@
 """
-test_customer.py - Unit tests for the Customer class.
+customer_test.py - Unit tests for the Customer class.
 
 Tests cover creation, deletion, display and modification,
 including negative cases.

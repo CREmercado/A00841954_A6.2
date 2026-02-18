@@ -1,5 +1,5 @@
 """
-test_reservation.py - Unit tests for the Reservation class.
+reservation_test.py - Unit tests for the Reservation class.
 
 Tests cover creation, cancellation and display of reservations,
 including negative cases and cross-entity validation.

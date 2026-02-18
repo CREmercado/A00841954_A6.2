@@ -8,15 +8,13 @@ Author: A00841954 Christian Erick Mercado Flores
 Date: February 2026
 """
 
-import json
-import os
 from datetime import date
 
 import src.hotel as hotel_module
 import src.customer as customer_module
+from .utils.file_manager import load_json, save_json
 from .utils.constants import (
     ERROR_PREFIX,
-    SUCCESS_PREFIX,
     WARNING_PREFIX,
     RESERVATIONS_FILE,
     ACTIVE_STATUS,
@@ -26,26 +24,12 @@ from .utils.constants import (
 
 def _load_reservations():
     """Load reservations from the JSON file."""
-    if not os.path.exists(RESERVATIONS_FILE):
-        return {}
-    try:
-        with open(RESERVATIONS_FILE, "r", encoding="utf-8") as file:
-            print(f"{WARNING_PREFIX} Reservations file is being loaded...")
-            return json.load(file)
-    except (json.JSONDecodeError, IOError) as error:
-        print(f"{ERROR_PREFIX} Could not load reservations file: {error}")
-        return {}
+    return load_json(RESERVATIONS_FILE, "Reservations")
 
 
 def _save_reservations(reservations):
     """Save reservations dictionary to the JSON file."""
-    os.makedirs(os.path.dirname(RESERVATIONS_FILE), exist_ok=True)
-    try:
-        with open(RESERVATIONS_FILE, "w", encoding="utf-8") as file:
-            json.dump(reservations, file, indent=4)
-            print(f"{SUCCESS_PREFIX} Reservations saved successfully.")
-    except IOError as error:
-        print(f"{ERROR_PREFIX} Could not save reservations file: {error}")
+    save_json(RESERVATIONS_FILE, reservations, "Reservations")
 
 
 class Reservation:

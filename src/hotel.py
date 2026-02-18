@@ -8,12 +8,9 @@ Author: A00841954 Christian Erick Mercado Flores
 Date: February 2026
 """
 
-import json
-import os
-
+from .utils.file_manager import load_json, save_json
 from .utils.constants import (
     ERROR_PREFIX,
-    SUCCESS_PREFIX,
     WARNING_PREFIX,
     HOTELS_FILE,
 )
@@ -21,26 +18,12 @@ from .utils.constants import (
 
 def _load_hotels():
     """Load hotels from the JSON file."""
-    if not os.path.exists(HOTELS_FILE):
-        return {}
-    try:
-        with open(HOTELS_FILE, "r", encoding="utf-8") as file:
-            print(f"{WARNING_PREFIX} Hotels file is being loaded...")
-            return json.load(file)
-    except (json.JSONDecodeError, IOError) as error:
-        print(f"{ERROR_PREFIX} Could not load hotels file: {error}")
-        return {}
+    return load_json(HOTELS_FILE, "Hotels")
     
 
 def _save_hotels(hotels):
     """Save hotels dictionary to the JSON file."""
-    os.makedirs(os.path.dirname(HOTELS_FILE), exist_ok=True)
-    try:
-        with open(HOTELS_FILE, "w", encoding="utf-8") as file:
-            json.dump(hotels, file, indent=4)
-            print(f"{SUCCESS_PREFIX} Hotels saved successfully.")
-    except IOError as error:
-        print(f"{ERROR_PREFIX} Could not save hotels file: {error}")
+    save_json(HOTELS_FILE, hotels, "Hotels")
 
 
 class Hotel:
