@@ -109,7 +109,7 @@ class Hotel:
         print(f"{WARNING_PREFIX} Modifying hotel with ID '{hotel_id}'...")
         hotels = _load_hotels()
         if hotel_id not in hotels:
-            print(f"[ERROR] Hotel with ID '{hotel_id}' not found.")
+            print(f"{ERROR_PREFIX} Hotel with ID '{hotel_id}' not found.")
             return False
         if name:
             hotels[hotel_id]["name"] = name
@@ -142,8 +142,26 @@ class Hotel:
         return Hotel.from_dict(data)
     
     @staticmethod
-    def reserve_room():
-        pass
+    def reserve_room(hotel_id, reservation_id):
+        """Reserve a hotel room."""
+        print(f"{WARNING_PREFIX} Reserving room in hotel '{hotel_id}' "
+              f"for reservation '{reservation_id}'...")
+        hotels = _load_hotels()
+        if hotel_id not in hotels:
+            print(f"{ERROR_PREFIX} Hotel with ID '{hotel_id}' not found.")
+            return False
+        hotel_data = hotels[hotel_id]
+        if hotel_data["available_rooms"] <= 0:
+            print(f"{ERROR_PREFIX} No available rooms in hotel '{hotel_id}'.")
+            return False
+        if reservation_id in hotel_data["reservations"]:
+            print(f"{ERROR_PREFIX} Reservation '{reservation_id}' already exists "
+                  f"in hotel '{hotel_id}'.")
+            return False
+        hotel_data["available_rooms"] -= 1
+        hotel_data["reservations"].append(reservation_id)
+        _save_hotels(hotels)
+        return True
     
     @staticmethod
     def cancel_room_reservation():

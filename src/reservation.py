@@ -83,8 +83,34 @@ class Reservation:
         return res
 
     @staticmethod
-    def create_reservation():
-        pass
+    def create_reservation(reservation_id, customer_id, hotel_id, check_in=None, check_out=None):
+        """Create reservation."""
+        print(f"{WARNING_PREFIX} Attempting to create reservation '{reservation_id}' "
+              f"for customer '{customer_id}' at hotel '{hotel_id}'...")
+        reservations = _load_reservations()
+        if reservation_id in reservations:
+            print(f"{ERROR_PREFIX} Reservation '{reservation_id}' already exists.")
+            return None
+
+        customers = customer_module._load_customers()
+        if customer_id not in customers:
+            print(f"{ERROR_PREFIX} Customer with ID '{customer_id}' not found.")
+            return None
+
+        if not hotel_module.Hotel.reserve_room(hotel_id, reservation_id):
+            return None
+
+        if check_in is None:
+            check_in = str(date.today())
+        if check_out is None:
+            check_out = str(date.today())
+
+        reservation = Reservation(
+            reservation_id, customer_id, hotel_id, check_in, check_out
+        )
+        reservations[reservation_id] = reservation.to_dict()
+        _save_reservations(reservations)
+        return reservation
 
     @staticmethod
     def cancel_reservation():
