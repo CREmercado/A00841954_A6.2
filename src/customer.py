@@ -75,21 +75,21 @@ class Customer:
         )
     
     @staticmethod
-    def create_customer(customer_id, name, email, phone):
+    def create_customer(customer_id, first_name, last_name, email, phone):
         """Create customer."""
         print(f"{WARNING_PREFIX} Creating customer with ID '{customer_id}'...")
         customers = _load_customers()
         if customer_id in customers:
             print(f"{ERROR_PREFIX} Customer with ID '{customer_id}' already exists.")
             return None
-        customer = Customer(customer_id, name, email, phone)
+        customer = Customer(customer_id, first_name, last_name, email, phone)
         customers[customer_id] = customer.to_dict()
         _save_customers(customers)
         return customer
 
     @staticmethod
     def delete_customer(customer_id):
-        """Delete a customer by their ID."""
+        """Delete customer."""
         print(f"{WARNING_PREFIX} Deleting customer with ID '{customer_id}'...")
         customers = _load_customers()
         if customer_id not in customers:
@@ -100,9 +100,36 @@ class Customer:
         return True
 
     @staticmethod
-    def display_customer():
-        pass
-
+    def modify_customer(customer_id, first_name=None, last_name=None, email=None, phone=None):
+        """Modify customer attributes."""
+        print(f"{WARNING_PREFIX} Modifying customer with ID '{customer_id}'...")
+        customers = _load_customers()
+        if customer_id not in customers:
+            print(f"[ERROR] Customer with ID '{customer_id}' not found.")
+            return False
+        if first_name:
+            customers[customer_id]["first_name"] = first_name
+        if last_name:
+            customers[customer_id]["last_name"] = last_name
+        if email:
+            customers[customer_id]["email"] = email
+        if phone:
+            customers[customer_id]["phone"] = phone
+        _save_customers(customers)
+        return True
+    
     @staticmethod
-    def modify_customer():
-        pass
+    def display_customer(customer_id):
+        """Display customer information."""
+        customers = _load_customers()
+        if customer_id not in customers:
+            print(f"{ERROR_PREFIX} Customer with ID '{customer_id}' not found.")
+            return None
+        data = customers[customer_id]
+        print("Customer Information: ")
+        print(f"  - ID          : {data['customer_id']}")
+        print(f"  - First Name  : {data['first_name']}")
+        print(f"  - Last Name   : {data['last_name']}")
+        print(f"  - Email       : {data['email']}")
+        print(f"  - Phone       : {data['phone']}")
+        return Customer.from_dict(data)

@@ -106,7 +106,6 @@ class Hotel:
     @staticmethod
     def display_hotel(hotel_id):
         """Display hotel."""
-        print(f"{WARNING_PREFIX} Displaying hotel with ID '{hotel_id}'...")
         hotels = _load_hotels()
         if hotel_id not in hotels:
             print(f"{ERROR_PREFIX} Hotel with ID '{hotel_id}' not found.")
