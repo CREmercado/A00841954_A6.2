@@ -1,0 +1,18 @@
+{
+    "H001": {
+        "hotel_id": "H001",
+        "name": "Grand Plaza Hotel",
+        "location": "New York, NY",
+        "total_rooms": 50,
+        "available_rooms": 48,
+        "reservations": ["R001"]
+    },
+    "H002": {
+        "hotel_id": "H002",
+        "name": "Pacific Ocean View",
+        "location": "Los Angeles, CA",
+        "total_rooms": 30,
+        "available_rooms": 30,
+        "reservations": ["R002"]
+    }
+}
