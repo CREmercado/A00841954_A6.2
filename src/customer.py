@@ -77,7 +77,7 @@ class Customer:
     @staticmethod
     def create_customer(customer_id, name, email, phone):
         """Create customer."""
-        print(f"{WARNING_PREFIX} Creating customer with ID '{customer_id}'. Ensure the ID is unique.")
+        print(f"{WARNING_PREFIX} Creating customer with ID '{customer_id}'...")
         customers = _load_customers()
         if customer_id in customers:
             print(f"{ERROR_PREFIX} Customer with ID '{customer_id}' already exists.")
@@ -88,8 +88,16 @@ class Customer:
         return customer
 
     @staticmethod
-    def delete_customer():
-        pass
+    def delete_customer(customer_id):
+        """Delete a customer by their ID."""
+        print(f"{WARNING_PREFIX} Deleting customer with ID '{customer_id}'...")
+        customers = _load_customers()
+        if customer_id not in customers:
+            print(f"{ERROR_PREFIX} Customer with ID '{customer_id}' not found.")
+            return False
+        del customers[customer_id]
+        _save_customers(customers)
+        return True
 
     @staticmethod
     def display_customer():

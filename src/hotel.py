@@ -81,7 +81,7 @@ class Hotel:
     @staticmethod
     def create_hotel(hotel_id, name, city, total_rooms):
         """Create hotel."""
-        print(f"{WARNING_PREFIX} Creating hotel with ID '{hotel_id}'. Ensure the ID is unique.")
+        print(f"{WARNING_PREFIX} Creating hotel with ID '{hotel_id}'...")
         hotels = _load_hotels()
         if hotel_id in hotels:
             print(f"{ERROR_PREFIX} Hotel with ID '{hotel_id}' already exists.")
