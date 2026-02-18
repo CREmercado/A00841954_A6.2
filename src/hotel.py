@@ -11,7 +11,13 @@ Date: February 2026
 import json
 import os
 
-from .constants import ERROR_PREFIX, SUCCESS_PREFIX, WARNING_PREFIX, HOTELS_FILE
+from .utils.constants import (
+    ERROR_PREFIX,
+    SUCCESS_PREFIX,
+    WARNING_PREFIX,
+    HOTELS_FILE,
+)
+
 
 def _load_hotels():
     """Load hotels from the JSON file."""
