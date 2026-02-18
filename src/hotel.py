@@ -11,7 +11,7 @@ Date: February 2026
 import json
 import os
 
-from .constants import ERROR_PREFIX, HOTELS_FILE
+from .constants import ERROR_PREFIX, SUCCESS_PREFIX, WARNING_PREFIX, HOTELS_FILE
 
 def _load_hotels():
     """Load hotels from the JSON file."""
@@ -19,6 +19,7 @@ def _load_hotels():
         return {}
     try:
         with open(HOTELS_FILE, "r", encoding="utf-8") as file:
+            print(f"{WARNING_PREFIX} Hotels file is being loaded. Ensure it is not corrupted.")
             return json.load(file)
     except (json.JSONDecodeError, IOError) as error:
         print(f"{ERROR_PREFIX} Could not load hotels file: {error}")
@@ -30,6 +31,7 @@ def _save_hotels(hotels):
     try:
         with open(HOTELS_FILE, "w", encoding="utf-8") as file:
             json.dump(hotels, file, indent=4)
+            print(f"{SUCCESS_PREFIX} Hotels saved successfully.")
     except IOError as error:
         print(f"{ERROR_PREFIX} Could not save hotels file: {error}")
 
@@ -56,8 +58,29 @@ class Hotel:
         }
 
     @staticmethod
-    def create_hotel():
-        pass
+    def from_dict(data):
+        """Hotel from a dictionary."""
+        hotel = Hotel(
+            hotel_id=data["hotel_id"],
+            name=data["name"],
+            city=data["city"],
+            total_rooms=data["total_rooms"],
+        )
+        hotel.available_rooms = data.get("available_rooms", data["total_rooms"])
+        hotel.reservations = data.get("reservations", [])
+        return hotel
+
+    @staticmethod
+    def create_hotel(hotel_id, name, city, total_rooms):
+        """Create hotel."""
+        hotels = _load_hotels()
+        if hotel_id in hotels:
+            print(f"{ERROR_PREFIX} Hotel with ID '{hotel_id}' already exists.")
+            return None
+        hotel = Hotel(hotel_id, name, city, total_rooms)
+        hotels[hotel_id] = hotel.to_dict()
+        _save_hotels(hotels)
+        return hotel
     
     @staticmethod
     def delete_hotel():
