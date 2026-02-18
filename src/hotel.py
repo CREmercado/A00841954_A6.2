@@ -120,22 +120,9 @@ class Hotel:
         return Hotel.from_dict(data)
 
     @staticmethod
-    def modify_hotel(hotel_id, name=None, city=None, total_rooms=None):
-        """Modify hotel."""
-        print(f"{WARNING_PREFIX} Modifying hotel with ID '{hotel_id}'...")
-        hotels = _load_hotels()
-        if hotel_id not in hotels:
-            print(f"{ERROR_PREFIX} Hotel with ID '{hotel_id}' not found.")
-            return False
-        if name:
-            hotels[hotel_id]["name"] = name
-        if city:
-            hotels[hotel_id]["city"] = city
-        if total_rooms is not None:
-            diff = total_rooms - hotels[hotel_id]["total_rooms"]
-            hotels[hotel_id]["total_rooms"] = total_rooms
-            hotels[hotel_id]["available_rooms"] = max(
-                0, hotels[hotel_id]["available_rooms"] + diff
-            )
-        _save_hotels(hotels)
-        return True
+    def modify_hotel():
+        pass
+    
+    @staticmethod
+    def reserve_room():
+        pass
