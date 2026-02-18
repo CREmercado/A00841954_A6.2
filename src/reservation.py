@@ -19,7 +19,8 @@ from .utils.constants import (
     SUCCESS_PREFIX,
     WARNING_PREFIX,
     RESERVATIONS_FILE,
-    ACTIVE_STATUS
+    ACTIVE_STATUS,
+    CANCELED_STATUS,
 )
 
 
@@ -85,11 +86,11 @@ class Reservation:
     @staticmethod
     def create_reservation(reservation_id, customer_id, hotel_id, check_in=None, check_out=None):
         """Create reservation."""
-        print(f"{WARNING_PREFIX} Attempting to create reservation '{reservation_id}' "
-              f"for customer '{customer_id}' at hotel '{hotel_id}'...")
+        print(f"{WARNING_PREFIX} Attempting to create Reservation with ID '{reservation_id}' "
+              f"for Customer with ID '{customer_id}' at Hotel with ID '{hotel_id}'...")
         reservations = _load_reservations()
         if reservation_id in reservations:
-            print(f"{ERROR_PREFIX} Reservation '{reservation_id}' already exists.")
+            print(f"{ERROR_PREFIX} Reservation with ID '{reservation_id}' already exists.")
             return None
 
         customers = customer_module._load_customers()
@@ -113,8 +114,27 @@ class Reservation:
         return reservation
 
     @staticmethod
-    def cancel_reservation():
-        pass
+    def cancel_reservation(reservation_id):
+        """Cancel hotel room reservation."""
+        print(f"{WARNING_PREFIX} Attempting to cancel Reservation with ID '{reservation_id}'...")
+        reservations = _load_reservations()
+        if reservation_id not in reservations:
+            print(f"{ERROR_PREFIX} Reservation with ID '{reservation_id}' not found.")
+            return False
+
+        reservation = reservations[reservation_id]
+        if reservation["status"] == CANCELED_STATUS:
+            print(f"{ERROR_PREFIX} Reservation with ID '{reservation_id}' is already "
+                  "{CANCELED_STATUS}.")
+            return False
+
+        hotel_module.Hotel.cancel_room_reservation(
+            reservation["hotel_id"], reservation_id
+        )
+
+        reservations[reservation_id]["status"] = CANCELED_STATUS
+        _save_reservations(reservations)
+        return True
 
     @staticmethod
     def display_reservation():

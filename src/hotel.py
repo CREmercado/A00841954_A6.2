@@ -81,7 +81,7 @@ class Hotel:
     @staticmethod
     def create_hotel(hotel_id, name, city, total_rooms):
         """Create hotel."""
-        print(f"{WARNING_PREFIX} Creating hotel with ID '{hotel_id}'...")
+        print(f"{WARNING_PREFIX} Creating Hotel with ID '{hotel_id}'...")
         hotels = _load_hotels()
         if hotel_id in hotels:
             print(f"{ERROR_PREFIX} Hotel with ID '{hotel_id}' already exists.")
@@ -94,7 +94,7 @@ class Hotel:
     @staticmethod
     def delete_hotel(hotel_id):
         """Delete hotel."""
-        print(f"{WARNING_PREFIX} Deleting hotel with ID '{hotel_id}'...")
+        print(f"{WARNING_PREFIX} Deleting Hotel with ID '{hotel_id}'...")
         hotels = _load_hotels()
         if hotel_id not in hotels:
             print(f"{ERROR_PREFIX} Hotel with ID '{hotel_id}' not found.")
@@ -106,7 +106,7 @@ class Hotel:
     @staticmethod
     def modify_hotel(hotel_id, name=None, location=None, total_rooms=None):
         """Modify hotel."""
-        print(f"{WARNING_PREFIX} Modifying hotel with ID '{hotel_id}'...")
+        print(f"{WARNING_PREFIX} Modifying Hotel with ID '{hotel_id}'...")
         hotels = _load_hotels()
         if hotel_id not in hotels:
             print(f"{ERROR_PREFIX} Hotel with ID '{hotel_id}' not found.")
@@ -144,25 +144,43 @@ class Hotel:
     @staticmethod
     def reserve_room(hotel_id, reservation_id):
         """Reserve a hotel room."""
-        print(f"{WARNING_PREFIX} Reserving room in hotel '{hotel_id}' "
-              f"for reservation '{reservation_id}'...")
+        print(f"{WARNING_PREFIX} Reserving room in Hotel with ID'{hotel_id}' "
+              f"for Reservation with ID '{reservation_id}'...")
         hotels = _load_hotels()
         if hotel_id not in hotels:
             print(f"{ERROR_PREFIX} Hotel with ID '{hotel_id}' not found.")
             return False
-        hotel_data = hotels[hotel_id]
-        if hotel_data["available_rooms"] <= 0:
-            print(f"{ERROR_PREFIX} No available rooms in hotel '{hotel_id}'.")
+        hotel = hotels[hotel_id]
+        if hotel["available_rooms"] <= 0:
+            print(f"{ERROR_PREFIX} No available rooms in Hotel with ID '{hotel_id}'.")
             return False
-        if reservation_id in hotel_data["reservations"]:
+        if reservation_id in hotel["reservations"]:
             print(f"{ERROR_PREFIX} Reservation '{reservation_id}' already exists "
                   f"in hotel '{hotel_id}'.")
             return False
-        hotel_data["available_rooms"] -= 1
-        hotel_data["reservations"].append(reservation_id)
+        hotel["available_rooms"] -= 1
+        hotel["reservations"].append(reservation_id)
         _save_hotels(hotels)
         return True
     
     @staticmethod
-    def cancel_room_reservation():
-        pass
+    def cancel_room_reservation(hotel_id, reservation_id):
+        """Cancel hotel room reservation."""
+        print(f"{WARNING_PREFIX} Canceling Reservation with ID '{reservation_id}' "
+              f"in Hotel with ID '{hotel_id}'...")
+        hotels = _load_hotels()
+        if hotel_id not in hotels:
+            print(f"{ERROR_PREFIX} Hotel with ID '{hotel_id}' not found.")
+            return False
+        hotel = hotels[hotel_id]
+        if reservation_id not in hotel["reservations"]:
+            print(f"{ERROR_PREFIX} Reservation with ID '{reservation_id}' not found "
+                  f"in Hotel with ID '{hotel_id}'.")
+            return False
+        hotel["reservations"].remove(reservation_id)
+        hotel["available_rooms"] = min(
+            hotel["available_rooms"] + 1,
+            hotel["total_rooms"]
+        )
+        _save_hotels(hotels)
+        return True

@@ -77,7 +77,7 @@ class Customer:
     @staticmethod
     def create_customer(customer_id, first_name, last_name, email, phone):
         """Create customer."""
-        print(f"{WARNING_PREFIX} Creating customer with ID '{customer_id}'...")
+        print(f"{WARNING_PREFIX} Creating Customer with ID '{customer_id}'...")
         customers = _load_customers()
         if customer_id in customers:
             print(f"{ERROR_PREFIX} Customer with ID '{customer_id}' already exists.")
@@ -90,7 +90,7 @@ class Customer:
     @staticmethod
     def delete_customer(customer_id):
         """Delete customer."""
-        print(f"{WARNING_PREFIX} Deleting customer with ID '{customer_id}'...")
+        print(f"{WARNING_PREFIX} Deleting Customer with ID '{customer_id}'...")
         customers = _load_customers()
         if customer_id not in customers:
             print(f"{ERROR_PREFIX} Customer with ID '{customer_id}' not found.")
@@ -102,10 +102,10 @@ class Customer:
     @staticmethod
     def modify_customer(customer_id, first_name=None, last_name=None, email=None, phone=None):
         """Modify customer."""
-        print(f"{WARNING_PREFIX} Modifying customer with ID '{customer_id}'...")
+        print(f"{WARNING_PREFIX} Modifying Customer with ID '{customer_id}'...")
         customers = _load_customers()
         if customer_id not in customers:
-            print(f"[ERROR] Customer with ID '{customer_id}' not found.")
+            print(f"{ERROR_PREFIX} Customer with ID '{customer_id}' not found.")
             return False
         if first_name:
             customers[customer_id]["first_name"] = first_name
