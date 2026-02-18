@@ -7,3 +7,29 @@ room reservation and cancellation with JSON file persistence.
 Author: A00841954 Christian Erick Mercado Flores
 Date: February 2026
 """
+
+import json
+import os
+
+HOTELS_FILE = "data/hotels.json"
+
+class Hotel:
+
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def create_hotel():
+        pass
+    
+    @staticmethod
+    def delete_hotel():
+        pass
+
+    @staticmethod
+    def display_hotels():
+        pass
+
+    @staticmethod
+    def modify_hotel():
+        pass
