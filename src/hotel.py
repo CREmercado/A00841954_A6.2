@@ -35,8 +35,14 @@ def _save_hotels(hotels):
 
 class Hotel:
 
-    def __init__(self):
-        pass
+    def __init__(self, hotel_id, name, location, total_rooms):
+        """Initialize a Hotel."""
+        self.hotel_id = hotel_id
+        self.name = name
+        self.location = location
+        self.total_rooms = total_rooms
+        self.available_rooms = total_rooms
+        self.reservations = []
 
     @staticmethod
     def create_hotel():
