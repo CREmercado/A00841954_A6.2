@@ -15,3 +15,4 @@ WARNING_PREFIX = "[WARNING]"
 
 HOTELS_FILE = "data/hotels.json"
 CUSTOMERS_FILE = "data/customers.json"
+RESERVATIONS_FILE = "data/reservations.json"
