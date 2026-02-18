@@ -35,14 +35,25 @@ def _save_hotels(hotels):
 
 class Hotel:
 
-    def __init__(self, hotel_id, name, location, total_rooms):
+    def __init__(self, hotel_id, name, city, total_rooms):
         """Initialize a Hotel."""
         self.hotel_id = hotel_id
         self.name = name
-        self.location = location
+        self.city = city
         self.total_rooms = total_rooms
         self.available_rooms = total_rooms
         self.reservations = []
+    
+    def to_dict(self):
+        """Hotel to a dictionary."""
+        return {
+            "hotel_id": self.hotel_id,
+            "name": self.name,
+            "city": self.city,
+            "total_rooms": self.total_rooms,
+            "available_rooms": self.available_rooms,
+            "reservations": self.reservations,
+        }
 
     @staticmethod
     def create_hotel():
