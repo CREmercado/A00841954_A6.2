@@ -16,3 +16,6 @@ WARNING_PREFIX = "[WARNING]"
 HOTELS_FILE = "data/hotels.json"
 CUSTOMERS_FILE = "data/customers.json"
 RESERVATIONS_FILE = "data/reservations.json"
+
+ACTIVE_STATUS = "active"
+CANCELED_STATUS = "canceled"

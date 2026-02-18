@@ -19,6 +19,7 @@ from .utils.constants import (
     SUCCESS_PREFIX,
     WARNING_PREFIX,
     RESERVATIONS_FILE,
+    ACTIVE_STATUS
 )
 
 
@@ -48,8 +49,38 @@ def _save_reservations(reservations):
 
 class Reservation:
     
-    def __init__(self):
-        pass
+    def __init__(self, reservation_id, customer_id, hotel_id, check_in, check_out):
+        """Initialize a Reservation."""
+        self.reservation_id = reservation_id
+        self.customer_id = customer_id
+        self.hotel_id = hotel_id
+        self.check_in = check_in
+        self.check_out = check_out
+        self.status = ACTIVE_STATUS
+    
+    def to_dict(self):
+        """Reservation to a dictionary."""
+        return {
+            "reservation_id": self.reservation_id,
+            "customer_id": self.customer_id,
+            "hotel_id": self.hotel_id,
+            "check_in": self.check_in,
+            "check_out": self.check_out,
+            "status": self.status,
+        }
+    
+    @staticmethod
+    def from_dict(data):
+        """Reservation from a dictionary."""
+        res = Reservation(
+            reservation_id=data["reservation_id"],
+            customer_id=data["customer_id"],
+            hotel_id=data["hotel_id"],
+            check_in=data["check_in"],
+            check_out=data["check_out"],
+        )
+        res.status = data.get("status", ACTIVE_STATUS)
+        return res
 
     @staticmethod
     def create_reservation():
