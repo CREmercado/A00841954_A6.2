@@ -25,7 +25,7 @@ def _load_customers():
         return {}
     try:
         with open(CUSTOMERS_FILE, "r", encoding="utf-8") as file:
-            print(f"{WARNING_PREFIX} Customers file is being loaded. Ensure it is not corrupted.")
+            print(f"{WARNING_PREFIX} Customers file is being loaded...")
             return json.load(file)
     except (json.JSONDecodeError, IOError) as error:
         print(f"{ERROR_PREFIX} Could not load customers file: {error}")

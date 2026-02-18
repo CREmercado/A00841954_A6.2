@@ -22,6 +22,30 @@ from .utils.constants import (
 )
 
 
+def _load_reservations():
+    """Load reservations from the JSON file."""
+    if not os.path.exists(RESERVATIONS_FILE):
+        return {}
+    try:
+        with open(RESERVATIONS_FILE, "r", encoding="utf-8") as file:
+            print(f"{WARNING_PREFIX} Reservations file is being loaded...")
+            return json.load(file)
+    except (json.JSONDecodeError, IOError) as error:
+        print(f"{ERROR_PREFIX} Could not load reservations file: {error}")
+        return {}
+
+
+def _save_reservations(reservations):
+    """Save reservations dictionary to the JSON file."""
+    os.makedirs(os.path.dirname(RESERVATIONS_FILE), exist_ok=True)
+    try:
+        with open(RESERVATIONS_FILE, "w", encoding="utf-8") as file:
+            json.dump(reservations, file, indent=4)
+            print(f"{SUCCESS_PREFIX} Reservations saved successfully.")
+    except IOError as error:
+        print(f"{ERROR_PREFIX} Could not save reservations file: {error}")
+
+
 class Reservation:
     
     def __init__(self):
