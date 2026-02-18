@@ -101,7 +101,7 @@ class Customer:
 
     @staticmethod
     def modify_customer(customer_id, first_name=None, last_name=None, email=None, phone=None):
-        """Modify customer attributes."""
+        """Modify customer."""
         print(f"{WARNING_PREFIX} Modifying customer with ID '{customer_id}'...")
         customers = _load_customers()
         if customer_id not in customers:
@@ -120,7 +120,7 @@ class Customer:
     
     @staticmethod
     def display_customer(customer_id):
-        """Display customer information."""
+        """Display customer."""
         customers = _load_customers()
         if customer_id not in customers:
             print(f"{ERROR_PREFIX} Customer with ID '{customer_id}' not found.")

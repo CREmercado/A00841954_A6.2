@@ -104,6 +104,27 @@ class Hotel:
         return True
 
     @staticmethod
+    def modify_hotel(hotel_id, name=None, location=None, total_rooms=None):
+        """Modify hotel."""
+        print(f"{WARNING_PREFIX} Modifying hotel with ID '{hotel_id}'...")
+        hotels = _load_hotels()
+        if hotel_id not in hotels:
+            print(f"[ERROR] Hotel with ID '{hotel_id}' not found.")
+            return False
+        if name:
+            hotels[hotel_id]["name"] = name
+        if location:
+            hotels[hotel_id]["location"] = location
+        if total_rooms is not None:
+            diff = total_rooms - hotels[hotel_id]["total_rooms"]
+            hotels[hotel_id]["total_rooms"] = total_rooms
+            hotels[hotel_id]["available_rooms"] = max(
+                0, hotels[hotel_id]["available_rooms"] + diff
+            )
+        _save_hotels(hotels)
+        return True
+
+    @staticmethod
     def display_hotel(hotel_id):
         """Display hotel."""
         hotels = _load_hotels()
@@ -119,11 +140,11 @@ class Hotel:
               f"{data['available_rooms']} available")
         print(f"  - Reservations  : {data['reservations']}")
         return Hotel.from_dict(data)
-
-    @staticmethod
-    def modify_hotel():
-        pass
     
     @staticmethod
     def reserve_room():
+        pass
+    
+    @staticmethod
+    def cancel_room_reservation():
         pass
