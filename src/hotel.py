@@ -13,6 +13,25 @@ import os
 
 from .constants import ERROR_PREFIX, HOTELS_FILE
 
+def _load_hotels():
+    """Load hotels from the JSON file."""
+    if not os.path.exists(HOTELS_FILE):
+        return {}
+    try:
+        with open(HOTELS_FILE, "r", encoding="utf-8") as file:
+            return json.load(file)
+    except (json.JSONDecodeError, IOError) as error:
+        print(f"{ERROR_PREFIX} Could not load hotels file: {error}")
+        return {}
+    
+def _save_hotels(hotels):
+    """Save hotels dictionary to the JSON file."""
+    os.makedirs(os.path.dirname(HOTELS_FILE), exist_ok=True)
+    try:
+        with open(HOTELS_FILE, "w", encoding="utf-8") as file:
+            json.dump(hotels, file, indent=4)
+    except IOError as error:
+        print(f"{ERROR_PREFIX} Could not save hotels file: {error}")
 
 class Hotel:
 
