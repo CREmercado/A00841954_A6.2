@@ -11,7 +11,8 @@ Date: February 2026
 import json
 import os
 
-HOTELS_FILE = "data/hotels.json"
+from .constants import ERROR_PREFIX, HOTELS_FILE
+
 
 class Hotel:
 
