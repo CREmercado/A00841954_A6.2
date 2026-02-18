@@ -42,14 +42,50 @@ def _save_customers(customers):
     except IOError as error:
         print(f"{ERROR_PREFIX} Could not save customers file: {error}")
 
+
 class Customer:
 
-    def __init__(self):
-        pass
+    def __init__(self, customer_id, first_name, last_name, email, phone):
+        """Initialize a Customer."""
+        self.customer_id = customer_id
+        self.first_name = first_name
+        self.last_name = last_name
+        self.email = email
+        self.phone = phone
+
+    def to_dict(self):
+        """Customer to a dictionary."""
+        return {
+            "customer_id": self.customer_id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "phone": self.phone,
+        }
+
+    @staticmethod
+    def from_dict(data):
+        """Customer from a dictionary."""
+        return Customer(
+            customer_id=data["customer_id"],
+            first_name=data["first_name"],
+            last_name=data["last_name"],
+            email=data["email"],
+            phone=data["phone"],
+        )
     
     @staticmethod
-    def create_customer():
-        pass
+    def create_customer(customer_id, name, email, phone):
+        """Create customer."""
+        print(f"{WARNING_PREFIX} Creating customer with ID '{customer_id}'. Ensure the ID is unique.")
+        customers = _load_customers()
+        if customer_id in customers:
+            print(f"{ERROR_PREFIX} Customer with ID '{customer_id}' already exists.")
+            return None
+        customer = Customer(customer_id, name, email, phone)
+        customers[customer_id] = customer.to_dict()
+        _save_customers(customers)
+        return customer
 
     @staticmethod
     def delete_customer():

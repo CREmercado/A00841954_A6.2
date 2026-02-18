@@ -31,6 +31,7 @@ def _load_hotels():
         print(f"{ERROR_PREFIX} Could not load hotels file: {error}")
         return {}
     
+
 def _save_hotels(hotels):
     """Save hotels dictionary to the JSON file."""
     os.makedirs(os.path.dirname(HOTELS_FILE), exist_ok=True)
@@ -40,6 +41,7 @@ def _save_hotels(hotels):
             print(f"{SUCCESS_PREFIX} Hotels saved successfully.")
     except IOError as error:
         print(f"{ERROR_PREFIX} Could not save hotels file: {error}")
+
 
 class Hotel:
 
@@ -79,7 +81,7 @@ class Hotel:
     @staticmethod
     def create_hotel(hotel_id, name, city, total_rooms):
         """Create hotel."""
-        print(f"{WARNING_PREFIX} Creating hotel with ID '{hotel_id}'...")
+        print(f"{WARNING_PREFIX} Creating hotel with ID '{hotel_id}'. Ensure the ID is unique.")
         hotels = _load_hotels()
         if hotel_id in hotels:
             print(f"{ERROR_PREFIX} Hotel with ID '{hotel_id}' already exists.")
