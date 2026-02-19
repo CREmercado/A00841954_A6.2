@@ -12,14 +12,133 @@ import os
 import tempfile
 import unittest
 from unittest.mock import patch
-from src.customer import Customer, _load_hotels, _save_hotels
+from src.customer import Customer, _load_customers, _save_customers
 
 
 class TestCustomer(unittest.TestCase):
 
     def setUp(self):
-        pass
+        self.temp_dir = tempfile.mkdtemp()
+        self.temp_file = os.path.join(self.temp_dir, "customers.json")
+        with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
+            Customer.create_customer(
+                "C001", "Allan", "Flores", "aflores@mail.com", "5555555555"
+            )
+            Customer.create_customer(
+                "C002", "Erick", "Mercado", "cmercado@mail.com", "4444444444"
+            )
+            Customer.create_customer(
+                "C003", "Sara", "Hasso", "hasso@mail.com", "33333333"
+            )
+    
+    def test_load_customers_returns_empty_on_invalid_json(self):
+        """[NEGATIVE] _load_customers returns empty dict on malformed JSON."""
+        with open(self.temp_file, "w") as f:
+            f.write("{bad json here")
+        with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
+            result = _load_customers()
+        self.assertEqual(result, {})
+    
+    def test_save_and_load_customers_roundtrip(self):
+        """Customers saved and reloaded match original data."""
+        data = {
+            "C004": {
+                "customer_id": "C004",
+                "first_name": "Arena",
+                "last_name": "Suerte",
+                "email": "as@mail.com",
+                "phone": "777777",
+            }
+        }
+        with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
+            _save_customers(data)
+            loaded = _load_customers()
+        self.assertEqual(loaded, data)
 
+    def test_init_sets_attributes(self):
+        """Customer initializes with correct attributes."""
+        customer = Customer("C005", "Edgardo", "Perex", "ep@mail.com", "5551234")
+        self.assertEqual(customer.customer_id, "C005")
+        self.assertEqual(customer.first_name, "Edgardo")
+        self.assertEqual(customer.last_name, "Perex")
+        self.assertEqual(customer.email, "ep@mail.com")
+        self.assertEqual(customer.phone, "5551234")
+    
+    def test_to_dict_values_match(self):
+        """to_dict values match the customer attributes."""
+        customer = Customer("C005", "Edgardo", "Perex", "ep@mail.com", "5551234")
+        data = customer.to_dict()
+        self.assertEqual(data["customer_id"], "C005")
+        self.assertEqual(data["email"], "ep@mail.com")
+
+    def test_from_dict_creates_customer(self):
+        """from_dict correctly reconstructs a Customer object."""
+        data = {
+            "customer_id": "C005",
+            "first_name": "Edgardo",
+            "last_name": "Perex",
+            "email": "ep@mail.com",
+            "phone": "5551234",
+        }
+        customer = Customer.from_dict(data)
+        self.assertIsInstance(customer, Customer)
+        self.assertEqual(customer.customer_id, "C005")
+        self.assertEqual(customer.email, "ep@mail.com")
+    
+    def test_create_customer_success(self):
+        """create_customer returns a Customer object on success."""
+        with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
+            customer = Customer.create_customer(
+                "C005", "Edgardo", "Perex", "ep@mail.com", "5551234"
+            )
+        self.assertIsNotNone(customer)
+        self.assertEqual(customer.customer_id, "C005")
+
+    def test_create_customer_duplicate_id_returns_none(self):
+        """[NEGATIVE] create_customer returns None if customer ID already exists."""
+        with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
+            result = Customer.create_customer(
+                "C001", "Other", "Person", "other@mail.com", "0000000"
+            )
+        self.assertIsNone(result)
+
+    def test_create_customer_duplicate_does_not_overwrite(self):
+        """[NEGATIVE] Duplicate create_customer does not overwrite existing data."""
+        with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
+            Customer.create_customer(
+                "C001", "Allan", "Flores", "af@mail.com", "5551234"
+            )
+            Customer.create_customer(
+                "C001", "Hacker", "Smith", "hack@mail.com", "9999999"
+            )
+            customers = _load_customers()
+        self.assertEqual(customers["C001"]["first_name"], "Allan")
+    
+    def test_delete_customer_success(self):
+        """delete_customer returns True and removes customer from file."""
+        with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
+            result = Customer.delete_customer("C003")
+            customers = _load_customers()
+        self.assertTrue(result)
+        self.assertNotIn("C003", customers)
+    
+    def test_delete_customer_nonexistent_returns_false(self):
+        """[NEGATIVE] delete_customer returns False for a non-existent customer ID."""
+        with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
+            result = Customer.delete_customer("C999")
+        self.assertFalse(result)
+
+    def test_modify_customer_nonexistent_returns_false(self):
+        """[NEGATIVE] modify_customer returns False for a non-existent customer ID."""
+        with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
+            result = Customer.modify_customer("C999", email="ghost@mail.com")
+        self.assertFalse(result)
+    
+    def test_display_customer_nonexistent_returns_none(self):
+        """[NEGATIVE] display_customer returns None for a non-existent customer ID."""
+        with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
+            result = Customer.display_customer("C999")
+        self.assertIsNone(result)
 
 if __name__ == '__main__':
     unittest.main()
