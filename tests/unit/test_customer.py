@@ -1,5 +1,5 @@
 """
-customer_test.py - Unit tests for the Customer class.
+test_customer.py - Unit tests for the Customer class.
 
 Tests cover creation, deletion, display and modification,
 including negative cases.
@@ -24,6 +24,7 @@ class TestCustomer(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
         self.temp_file = os.path.join(self.temp_dir, "customers.json")
+        
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             Customer.create_customer(
                 "C001", "Allan", "Flores", "aflores@mail.com", "5555555555"
@@ -35,15 +36,7 @@ class TestCustomer(unittest.TestCase):
                 "C003", "Sara", "Hasso", "hasso@mail.com", "33333333"
             )
     
-    def test_load_customers_returns_empty_on_invalid_json(self):
-        """[NEGATIVE] _load_customers returns empty dict on malformed JSON."""
-        with open(self.temp_file, "w") as f:
-            f.write("{bad json here")
-        with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
-            result = _load_customers()
-        self.assertEqual(result, {})
-    
-    def test_save_and_load_customers_roundtrip(self):
+    def test_save_and_load_customers(self):
         """Customers saved and reloaded match original data."""
         data = {
             "C004": {
@@ -58,6 +51,24 @@ class TestCustomer(unittest.TestCase):
             _save_customers(data)
             loaded = _load_customers()
         self.assertEqual(loaded, data)
+    
+    def test_save_customers_ioerror_prints_error(self):
+        """[NEGATIVE] _save_customers handles IOError when saving file."""
+        data = {
+            "C010": {
+                "customer_id": "C010",
+                "first_name": "Test",
+                "last_name": "User",
+                "email": "test@mail.com",
+                "phone": "123456"
+            }
+        }
+        with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
+            with patch("builtins.open", side_effect=IOError("Disk error")):
+                with patch("builtins.print") as mock_print:
+                    _save_customers(data)
+
+        mock_print.assert_called()
 
     def test_init_sets_attributes(self):
         """Customer initializes with correct attributes."""
@@ -74,6 +85,16 @@ class TestCustomer(unittest.TestCase):
         data = customer.to_dict()
         self.assertEqual(data["customer_id"], "C005")
         self.assertEqual(data["email"], "ep@mail.com")
+    
+    def test_from_dict_missing_fields_raises_error(self):
+        """[NEGATIVE] from_dict raises KeyError if required fields are missing."""
+        incomplete_data = {
+            "customer_id": "C010",
+            "first_name": "NoLastName"
+            # missing last_name, email, phone
+        }
+        with self.assertRaises(KeyError):
+            Customer.from_dict(incomplete_data)
 
     def test_from_dict_creates_customer(self):
         """from_dict correctly reconstructs a Customer object."""
@@ -138,11 +159,37 @@ class TestCustomer(unittest.TestCase):
             result = Customer.modify_customer("C999", email="ghost@mail.com")
         self.assertFalse(result)
     
+    def test_modify_customer_does_not_change_unspecified_fields(self):
+        """modify_customer leaves unspecified fields unchanged."""
+        with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
+            Customer.modify_customer("C001", email="new@mail.com")
+            customers = _load_customers()
+        self.assertEqual(customers["C001"]["first_name"], "Allan")
+        self.assertEqual(customers["C001"]["phone"], "5555555555")
+    
+    def test_display_customer_returns_customer_object(self):
+        """display_customer returns a Customer instance for an existing ID."""
+        with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
+            result = Customer.display_customer("C001")
+        self.assertIsInstance(result, Customer)
+        self.assertEqual(result.customer_id, "C001")
+    
     def test_display_customer_nonexistent_returns_none(self):
         """[NEGATIVE] display_customer returns None for a non-existent customer ID."""
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             result = Customer.display_customer("C999")
         self.assertIsNone(result)
+
+    def test_load_customers_with_corrupted_file(self):
+        """[NEGATIVE] _load_customers handles corrupted JSON file."""
+        with open(self.temp_file, "w") as f:
+            f.write("INVALID JSON")
+
+        with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
+            result = _load_customers()
+
+        self.assertEqual(result, {})
+
 
 if __name__ == '__main__':
     unittest.main()

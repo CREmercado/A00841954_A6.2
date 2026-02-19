@@ -1,5 +1,5 @@
 """
-hotel_test.py - Unit tests for the Hotel class.
+test_hotel.py - Unit tests for the Hotel class.
 
 Tests cover creation, deletion, display, modification,
 room reservation and cancellation, including negative cases.
@@ -24,6 +24,7 @@ class TestHotel(unittest.TestCase):
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
         self.temp_file = os.path.join(self.temp_dir, "hotels.json")
+        
         with patch("src.hotel.HOTELS_FILE", self.temp_file):
             Hotel.create_hotel("H001", "Grand Plaza", "New York", 50)
             Hotel.create_hotel("H002", "Pacific Ocean View", "Los Angeles", 30)
@@ -47,6 +48,25 @@ class TestHotel(unittest.TestCase):
             _save_hotels(hotels_data)
             loaded = _load_hotels()
         self.assertEqual(loaded, hotels_data)
+
+    def test_save_hotels_ioerror_prints_error(self):
+        """[NEGATIVE] _save_hotels handles IOError when saving file."""
+        hotels_data = {
+            "H010": {
+                "hotel_id": "H010",
+                "name": "Fail Hotel",
+                "city": "Nowhere",
+                "total_rooms": 5,
+                "available_rooms": 5,
+                "reservations": []
+            }
+        }
+        with patch("src.hotel.HOTELS_FILE", self.temp_file):
+            with patch("builtins.open", side_effect=IOError("Disk error")):
+                with patch("builtins.print") as mock_print:
+                    _save_hotels(hotels_data)
+
+        mock_print.assert_called()
 
     def test_init_sets_attributes(self):
         """Hotel initializes with correct attributes."""
@@ -125,11 +145,27 @@ class TestHotel(unittest.TestCase):
             result = Hotel.modify_hotel("H999", name="Ghost Hotel")
         self.assertFalse(result)
 
+    def test_display_hotel_returns_hotel_object(self):
+        """display_hotel returns a Hotel instance for existing ID."""
+        with patch("src.hotel.HOTELS_FILE", self.temp_file):
+            result = Hotel.display_hotel("H001")
+        self.assertIsInstance(result, Hotel)
+        self.assertEqual(result.hotel_id, "H001")
+
     def test_display_hotel_nonexistent_returns_none(self):
         """[NEGATIVE] display_hotel returns None for a non-existent hotel ID."""
         with patch("src.hotel.HOTELS_FILE", self.temp_file):
             result = Hotel.display_hotel("H999")
         self.assertIsNone(result)
+    
+    def test_reserve_room_success(self):
+        """reserve_room decrements available_rooms and appends reservation ID."""
+        with patch("src.hotel.HOTELS_FILE", self.temp_file):
+            result = Hotel.reserve_room("H003", "R001")
+            hotels = _load_hotels()
+        self.assertTrue(result)
+        self.assertEqual(hotels["H003"]["available_rooms"], 1)
+        self.assertIn("R001", hotels["H003"]["reservations"])
     
     def test_reserve_room_hotel_not_found(self):
         """[NEGATIVE] reserve_room returns False when hotel ID does not exist."""
@@ -142,7 +178,14 @@ class TestHotel(unittest.TestCase):
         with patch("src.hotel.HOTELS_FILE", self.temp_file):
             Hotel.reserve_room("H003", "R003")
             Hotel.reserve_room("H003", "R004")
-            result = Hotel.reserve_room("H001", "R005")
+            result = Hotel.reserve_room("H003", "R005")
+        self.assertFalse(result)
+    
+    def test_reserve_room_duplicate_reservation_id(self):
+        """[NEGATIVE] reserve_room returns False for a duplicate reservation ID."""
+        with patch("src.hotel.HOTELS_FILE", self.temp_file):
+            Hotel.reserve_room("H002", "R001")
+            result = Hotel.reserve_room("H002", "R001")
         self.assertFalse(result)
 
     def test_cancel_reservation_hotel_not_found(self):
@@ -167,6 +210,15 @@ class TestHotel(unittest.TestCase):
             hotels["H001"]["total_rooms"]
         )
 
+    def test_load_hotels_with_corrupted_file(self):
+        """[NEGATIVE] _load_hotels handles corrupted JSON file."""
+        with open(self.temp_file, "w") as f:
+            f.write("INVALID JSON")
+
+        with patch("src.hotel.HOTELS_FILE", self.temp_file):
+            result = _load_hotels()
+
+        self.assertEqual(result, {})
 
 if __name__ == '__main__':
     unittest.main()
