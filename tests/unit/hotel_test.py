@@ -12,7 +12,11 @@ import os
 import tempfile
 import unittest
 from unittest.mock import patch
-from src.hotel import Hotel, _load_hotels, _save_hotels
+from src.hotel import (
+    Hotel, 
+    _load_hotels, 
+    _save_hotels
+)
 
 
 class TestHotel(unittest.TestCase):

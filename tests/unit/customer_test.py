@@ -12,7 +12,11 @@ import os
 import tempfile
 import unittest
 from unittest.mock import patch
-from src.customer import Customer, _load_customers, _save_customers
+from src.customer import (
+    Customer, 
+    _load_customers, 
+    _save_customers
+)
 
 
 class TestCustomer(unittest.TestCase):
