@@ -26,11 +26,28 @@ class TestHotel(unittest.TestCase):
             Hotel.create_hotel("H003", "Mision", "San Diego", 2)
             Hotel.reserve_room("H001", "R001")
             Hotel.reserve_room("H002", "R002")
+    
+    def test_save_and_load_hotels(self):
+        """Hotels saved and reloaded match original data."""
+        hotels_data = {
+            "H004": {
+                "hotel_id": "H004",
+                "name": "Test Hotel",
+                "city": "Boston",
+                "total_rooms": 10,
+                "available_rooms": 10,
+                "reservations": [],
+            }
+        }
+        with patch("src.hotel.HOTELS_FILE", self.temp_file):
+            _save_hotels(hotels_data)
+            loaded = _load_hotels()
+        self.assertEqual(loaded, hotels_data)
 
     def test_init_sets_attributes(self):
         """Hotel initializes with correct attributes."""
-        hotel = Hotel("H004", "City Express", "Denver", 20)
-        self.assertEqual(hotel.hotel_id, "H004")
+        hotel = Hotel("H005", "City Express", "Denver", 20)
+        self.assertEqual(hotel.hotel_id, "H005")
         self.assertEqual(hotel.name, "City Express")
         self.assertEqual(hotel.city, "Denver")
         self.assertEqual(hotel.total_rooms, 20)
@@ -39,9 +56,9 @@ class TestHotel(unittest.TestCase):
 
     def test_to_dict_values_match(self):
         """to_dict values match the hotel attributes."""
-        hotel = Hotel("H004", "City Express", "Denver", 20)
+        hotel = Hotel("H005", "City Express", "Denver", 20)
         data = hotel.to_dict()
-        self.assertEqual(data["hotel_id"], "H004")
+        self.assertEqual(data["hotel_id"], "H005")
         self.assertEqual(data["name"], "City Express")
         self.assertEqual(data["city"], "Denver")
         self.assertEqual(data["total_rooms"], 20)
@@ -51,7 +68,7 @@ class TestHotel(unittest.TestCase):
     def test_from_dict_creates_hotel(self):
         """from_dict correctly reconstructs a Hotel object."""
         data = {
-            "hotel_id": "H004",
+            "hotel_id": "H005",
             "name": "City Express",
             "city": "Denver",
             "total_rooms": 20,
@@ -59,16 +76,16 @@ class TestHotel(unittest.TestCase):
             "reservations": ["R003"],
         }
         hotel = Hotel.from_dict(data)
-        self.assertEqual(hotel.hotel_id, "H004")
+        self.assertEqual(hotel.hotel_id, "H005")
         self.assertEqual(hotel.available_rooms, 18)
         self.assertEqual(hotel.reservations, ["R003"])
         
     def test_create_hotel_success(self):
         """create_hotel returns a Hotel object on success."""
         with patch("src.hotel.HOTELS_FILE", self.temp_file):
-            hotel = Hotel.create_hotel("H004", "City Express", "Denver", 20)
+            hotel = Hotel.create_hotel("H005", "City Express", "Denver", 20)
         self.assertIsNotNone(hotel)
-        self.assertEqual(hotel.hotel_id, "H004")
+        self.assertEqual(hotel.hotel_id, "H005")
     
     def test_create_hotel_duplicate_id_returns_none(self):
         """[NEGATIVE] create_hotel returns None if hotel ID already exists."""
