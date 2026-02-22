@@ -1,5 +1,5 @@
 Pylint Report
-Date   : sábado, 21 de febrero de 2026, 23:18:46 CST
+Date   : sábado, 21 de febrero de 2026, 23:28:27 CST
 Target : src/
 ------------------------------------------------------------
 ************* Module src.reservation
@@ -17,4 +17,4 @@ src/utils/constants.py:21:0: C0304: Final newline missing (missing-final-newline
 src/utils/__init__.py:1:0: C0304: Final newline missing (missing-final-newline)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.62/10 (previous run: 9.35/10, +0.27)
+Your code has been rated at 9.62/10 (previous run: 9.62/10, +0.00)

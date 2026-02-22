@@ -1,7 +1,8 @@
 ============================================================
   Quality Analysis Report — Reservation System
-  Generated : sábado, 21 de febrero de 2026, 23:18:46 CST
+  Generated : sábado, 21 de febrero de 2026, 23:28:27 CST
   Target    : src/
 ============================================================
 Flake8 : FAIL — 21 issue(s)
 Pylint : 9.62/10
+Coverage: PASS — 99%

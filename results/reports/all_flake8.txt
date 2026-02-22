@@ -1,5 +1,5 @@
 Flake8 Report
-Date   : sábado, 21 de febrero de 2026, 23:18:46 CST
+Date   : sábado, 21 de febrero de 2026, 23:28:27 CST
 Target : src/
 ------------------------------------------------------------
 src/reservation.py:36:1: W293 blank line contains whitespace

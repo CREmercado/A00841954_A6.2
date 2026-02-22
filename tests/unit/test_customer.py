@@ -27,13 +27,13 @@ class TestCustomer(unittest.TestCase):
         
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             Customer.create_customer(
-                "C001", "Allan", "Flores", "aflores@mail.com", "5555555555"
+                "C001", "Allan Flores", "aflores@mail.com", "5555555555"
             )
             Customer.create_customer(
-                "C002", "Erick", "Mercado", "cmercado@mail.com", "4444444444"
+                "C002", "Erick Mercado", "cmercado@mail.com", "4444444444"
             )
             Customer.create_customer(
-                "C003", "Sara", "Hasso", "hasso@mail.com", "33333333"
+                "C003", "Sara Hasso", "hasso@mail.com", "33333333"
             )
     
     def test_save_and_load_customers(self):
@@ -70,7 +70,7 @@ class TestCustomer(unittest.TestCase):
 
     def test_init_sets_attributes(self):
         """Customer initializes with correct attributes."""
-        customer = Customer("C005", "Edgardo", "Perex", "ep@mail.com", "5551234")
+        customer = Customer("C005", "Edgardo Perex", "ep@mail.com", "5551234")
         self.assertEqual(customer.customer_id, "C005")
         self.assertEqual(customer.name, "Edgardo Perex")
         self.assertEqual(customer.email, "ep@mail.com")
@@ -78,7 +78,7 @@ class TestCustomer(unittest.TestCase):
     
     def test_to_dict_values_match(self):
         """to_dict values match the customer attributes."""
-        customer = Customer("C005", "Edgardo", "Perex", "ep@mail.com", "5551234")
+        customer = Customer("C005", "Edgardo Perex", "ep@mail.com", "5551234")
         data = customer.to_dict()
         self.assertEqual(data["customer_id"], "C005")
         self.assertEqual(data["email"], "ep@mail.com")
@@ -110,7 +110,7 @@ class TestCustomer(unittest.TestCase):
         """create_customer returns a Customer object on success."""
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             customer = Customer.create_customer(
-                "C005", "Edgardo", "Perex", "ep@mail.com", "5551234"
+                "C005", "Edgardo Perex", "ep@mail.com", "5551234"
             )
         self.assertIsNotNone(customer)
         self.assertEqual(customer.customer_id, "C005")
@@ -119,7 +119,7 @@ class TestCustomer(unittest.TestCase):
         """[NEGATIVE] create_customer returns None if customer ID already exists."""
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             result = Customer.create_customer(
-                "C001", "Other", "Person", "other@mail.com", "0000000"
+                "C001", "Other Person", "other@mail.com", "0000000"
             )
         self.assertIsNone(result)
 
@@ -127,13 +127,13 @@ class TestCustomer(unittest.TestCase):
         """[NEGATIVE] Duplicate create_customer does not overwrite existing data."""
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             Customer.create_customer(
-                "C001", "Allan", "Flores", "af@mail.com", "5551234"
+                "C001", "Allan Flores", "af@mail.com", "5551234"
             )
             Customer.create_customer(
-                "C001", "Hacker", "Smith", "hack@mail.com", "9999999"
+                "C001", "Hacker Smith", "hack@mail.com", "9999999"
             )
             customers = _load_customers()
-        self.assertEqual(customers["C001"]["name"], "Allan")
+        self.assertEqual(customers["C001"]["name"], "Allan Flores")
     
     def test_delete_customer_success(self):
         """delete_customer returns True and removes customer from file."""
@@ -160,7 +160,7 @@ class TestCustomer(unittest.TestCase):
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             Customer.modify_customer("C001", email="new@mail.com")
             customers = _load_customers()
-        self.assertEqual(customers["C001"]["name"], "Allan")
+        self.assertEqual(customers["C001"]["name"], "Allan Flores")
         self.assertEqual(customers["C001"]["phone"], "5555555555")
     
     def test_display_customer_returns_customer_object(self):

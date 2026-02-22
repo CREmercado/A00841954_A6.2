@@ -42,13 +42,13 @@ class TestReservation(unittest.TestCase):
 
         with self.patch_customers:
             Customer.create_customer(
-                "C001", "Allan", "Flores", "af@mail.com", "5551234"
+                "C001", "Allan Flores", "af@mail.com", "5551234"
             )
             Customer.create_customer(
-                "C002", "Erick", "Mercado", "cmercado@mail.com", "4444444444"
+                "C002", "Erick Mercado", "cmercado@mail.com", "4444444444"
             )
             Customer.create_customer(
-                "C003", "Sara", "Hasso", "hasso@mail.com", "33333333"
+                "C003", "Sara Hasso", "hasso@mail.com", "33333333"
             )
         
         with self.patch_hotels, self.patch_customers, self.patch_reservations:
