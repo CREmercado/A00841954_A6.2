@@ -222,3 +222,23 @@ class Customer:
 
         # Reconstruct domain object before returning
         return Customer.from_dict(data)
+
+    @staticmethod
+    def exists(customer_id):
+        """
+        Check whether a customer with the given ID exists.
+
+        This method provides a public access point to validate
+        customer existence without exposing internal persistence helpers.
+
+        Args:
+            customer_id (str): Unique identifier of the customer.
+
+        Returns:
+            bool: True if the customer exists, otherwise False.
+        """
+        # Load persisted customers
+        customers = _load_customers()
+
+        # Return existence validation result
+        return customer_id in customers

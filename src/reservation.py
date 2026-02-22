@@ -33,27 +33,27 @@ def _save_reservations(reservations):
 
 
 class Reservation:
-    
-    def __init__(self, reservation_id, customer_id, hotel_id, check_in, check_out):
+    """Represents a hotel room reservation."""
+
+    def __init__(self, reservation_id, customer_id, hotel_id, dates):
         """Initialize a Reservation."""
         self.reservation_id = reservation_id
         self.customer_id = customer_id
         self.hotel_id = hotel_id
-        self.check_in = check_in
-        self.check_out = check_out
+        self.dates = dates
         self.status = ACTIVE_STATUS
-    
+
     def to_dict(self):
         """Reservation to a dictionary."""
         return {
             "reservation_id": self.reservation_id,
             "customer_id": self.customer_id,
             "hotel_id": self.hotel_id,
-            "check_in": self.check_in,
-            "check_out": self.check_out,
+            "check_in": self.dates["check_in"],
+            "check_out": self.dates["check_out"],
             "status": self.status,
         }
-    
+
     @staticmethod
     def from_dict(data):
         """Reservation from a dictionary."""
@@ -61,25 +61,30 @@ class Reservation:
             reservation_id=data["reservation_id"],
             customer_id=data["customer_id"],
             hotel_id=data["hotel_id"],
-            check_in=data["check_in"],
-            check_out=data["check_out"],
+            dates={
+                "check_in": data["check_in"],
+                "check_out": data["check_out"],
+            },
         )
         res.status = data.get("status", ACTIVE_STATUS)
         return res
 
     @staticmethod
-    def create_reservation(reservation_id, customer_id, hotel_id, check_in=None, check_out=None):
+    def create_reservation(reservation_id, customer_id, hotel_id,
+                           check_in=None, check_out=None):
         """Create reservation."""
-        print(f"{WARNING_PREFIX} Attempting to create Reservation with ID '{reservation_id}' "
-              f"for Customer with ID '{customer_id}' at Hotel with ID '{hotel_id}'...")
+        print(f"{WARNING_PREFIX} Attempting to create Reservation with "
+              f"ID '{reservation_id}' for Customer with ID '{customer_id}' "
+              f"at Hotel with ID '{hotel_id}'...")
         reservations = _load_reservations()
         if reservation_id in reservations:
-            print(f"{ERROR_PREFIX} Reservation with ID '{reservation_id}' already exists.")
+            print(f"{ERROR_PREFIX} Reservation with ID '{reservation_id}' "
+                  "already exists.")
             return None
 
-        customers = customer_module._load_customers()
-        if customer_id not in customers:
-            print(f"{ERROR_PREFIX} Customer with ID '{customer_id}' not found.")
+        if not customer_module.Customer.exists(customer_id):
+            print(f"{ERROR_PREFIX} Customer with ID '{customer_id}' "
+                  "not found.")
             return None
 
         if not hotel_module.Hotel.reserve_room(hotel_id, reservation_id):
@@ -91,7 +96,13 @@ class Reservation:
             check_out = str(date.today())
 
         reservation = Reservation(
-            reservation_id, customer_id, hotel_id, check_in, check_out
+            reservation_id,
+            customer_id,
+            hotel_id,
+            {
+                "check_in": check_in,
+                "check_out": check_out,
+            },
         )
         reservations[reservation_id] = reservation.to_dict()
         _save_reservations(reservations)
@@ -100,15 +111,18 @@ class Reservation:
     @staticmethod
     def cancel_reservation(reservation_id):
         """Cancel hotel room reservation."""
-        print(f"{WARNING_PREFIX} Attempting to cancel Reservation with ID '{reservation_id}'...")
+        print(f"{WARNING_PREFIX} Attempting to cancel Reservation with "
+              f"ID '{reservation_id}'...")
         reservations = _load_reservations()
         if reservation_id not in reservations:
-            print(f"{ERROR_PREFIX} Reservation with ID '{reservation_id}' not found.")
+            print(f"{ERROR_PREFIX} Reservation with ID '{reservation_id}' "
+                  "not found.")
             return False
 
         reservation = reservations[reservation_id]
         if reservation["status"] == CANCELED_STATUS:
-            print(f"{ERROR_PREFIX} Reservation with ID '{reservation_id}' is already "
+            print(f"{ERROR_PREFIX} Reservation with ID '{reservation_id}' "
+                  "is already "
                   f"{CANCELED_STATUS}.")
             return False
 

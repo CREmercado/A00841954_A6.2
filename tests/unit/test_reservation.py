@@ -100,12 +100,21 @@ class TestReservation(unittest.TestCase):
 
     def test_init_sets_attributes(self):
         """Reservation initializes with correct attributes."""
-        reservation = Reservation("R005", "C001", "H002", "2026-03-01", "2026-03-05")
+        reservation = Reservation(
+            "R005",
+            "C001",
+            "H002",
+            {
+                "check_in": "2026-03-01",
+                "check_out": "2026-03-05",
+            },
+        )
+
         self.assertEqual(reservation.reservation_id, "R005")
         self.assertEqual(reservation.customer_id, "C001")
         self.assertEqual(reservation.hotel_id, "H002")
-        self.assertEqual(reservation.check_in, "2026-03-01")
-        self.assertEqual(reservation.check_out, "2026-03-05")
+        self.assertEqual(reservation.dates["check_in"], "2026-03-01")
+        self.assertEqual(reservation.dates["check_out"], "2026-03-05")
         self.assertEqual(reservation.status, ACTIVE_STATUS)
 
     def test_from_dict_creates_reservation(self):
