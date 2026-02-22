@@ -24,6 +24,7 @@ from src.utils.constants import ACTIVE_STATUS, CANCELED_STATUS
 
 
 class TestReservation(unittest.TestCase):
+    """Test suite for the Reservation class and its persistence functions."""
 
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
@@ -34,7 +35,7 @@ class TestReservation(unittest.TestCase):
         self.patch_hotels = patch("src.hotel.HOTELS_FILE", self.hotels_file)
         self.patch_customers = patch("src.customer.CUSTOMERS_FILE", self.customers_file)
         self.patch_reservations = patch("src.reservation.RESERVATIONS_FILE", self.reservations_file)
-        
+
         with self.patch_hotels:
             Hotel.create_hotel("H001", "Grand Plaza", "New York", 15)
             Hotel.create_hotel("H002", "Pacific Ocean View", "Los Angeles", 10)
@@ -50,7 +51,7 @@ class TestReservation(unittest.TestCase):
             Customer.create_customer(
                 "C003", "Sara Hasso", "hasso@mail.com", "33333333"
             )
-        
+
         with self.patch_hotels, self.patch_customers, self.patch_reservations:
             Reservation.create_reservation(
                 "R001", "C001", "H001", "2026-02-01", "2026-02-05"
@@ -78,7 +79,7 @@ class TestReservation(unittest.TestCase):
             _save_reservations(data)
             loaded = _load_reservations()
         self.assertEqual(loaded, data)
-    
+
     def test_save_hotels_ioerror_prints_error(self):
         """[NEGATIVE] _save_hotels handles IOError when saving file."""
         data = {
@@ -167,7 +168,7 @@ class TestReservation(unittest.TestCase):
                 "R007", "C001", "H999", "2026-02-01", "2026-02-05"
             )
         self.assertIsNone(result)
-    
+
     def test_create_reservation_no_rooms_available_returns_none(self):
         """[NEGATIVE] create_reservation returns None when hotel has no available rooms."""
         with self.patch_hotels, self.patch_customers, self.patch_reservations:
@@ -186,7 +187,7 @@ class TestReservation(unittest.TestCase):
             reservations = _load_reservations()
         self.assertTrue(result)
         self.assertEqual(reservations["R001"]["status"], CANCELED_STATUS)
-    
+
     def test_cancel_reservation_nonexistent_returns_false(self):
         """[NEGATIVE] cancel_reservation returns False for a non-existent reservation."""
         with self.patch_hotels, self.patch_customers, self.patch_reservations:
@@ -215,7 +216,7 @@ class TestReservation(unittest.TestCase):
 
     def test_load_reservations_with_corrupted_file(self):
         """[NEGATIVE] _load_reservations handles corrupted JSON file."""
-        with open(self.reservations_file, "w") as f:
+        with open(self.reservations_file, "w", encoding="utf-8") as f:
             f.write("INVALID JSON")
 
         with self.patch_reservations:
