@@ -41,8 +41,7 @@ class TestCustomer(unittest.TestCase):
         data = {
             "C004": {
                 "customer_id": "C004",
-                "first_name": "Arena",
-                "last_name": "Suerte",
+                "name": "Arena Suerte",
                 "email": "as@mail.com",
                 "phone": "777777",
             }
@@ -57,8 +56,7 @@ class TestCustomer(unittest.TestCase):
         data = {
             "C010": {
                 "customer_id": "C010",
-                "first_name": "Test",
-                "last_name": "User",
+                "name": "Test User",
                 "email": "test@mail.com",
                 "phone": "123456"
             }
@@ -74,8 +72,7 @@ class TestCustomer(unittest.TestCase):
         """Customer initializes with correct attributes."""
         customer = Customer("C005", "Edgardo", "Perex", "ep@mail.com", "5551234")
         self.assertEqual(customer.customer_id, "C005")
-        self.assertEqual(customer.first_name, "Edgardo")
-        self.assertEqual(customer.last_name, "Perex")
+        self.assertEqual(customer.name, "Edgardo Perex")
         self.assertEqual(customer.email, "ep@mail.com")
         self.assertEqual(customer.phone, "5551234")
     
@@ -90,8 +87,8 @@ class TestCustomer(unittest.TestCase):
         """[NEGATIVE] from_dict raises KeyError if required fields are missing."""
         incomplete_data = {
             "customer_id": "C010",
-            "first_name": "NoLastName"
-            # missing last_name, email, phone
+            "name": "NoLastName"
+            # missing email, phone
         }
         with self.assertRaises(KeyError):
             Customer.from_dict(incomplete_data)
@@ -100,8 +97,7 @@ class TestCustomer(unittest.TestCase):
         """from_dict correctly reconstructs a Customer object."""
         data = {
             "customer_id": "C005",
-            "first_name": "Edgardo",
-            "last_name": "Perex",
+            "name": "Edgardo Perex",
             "email": "ep@mail.com",
             "phone": "5551234",
         }
@@ -137,7 +133,7 @@ class TestCustomer(unittest.TestCase):
                 "C001", "Hacker", "Smith", "hack@mail.com", "9999999"
             )
             customers = _load_customers()
-        self.assertEqual(customers["C001"]["first_name"], "Allan")
+        self.assertEqual(customers["C001"]["name"], "Allan")
     
     def test_delete_customer_success(self):
         """delete_customer returns True and removes customer from file."""
@@ -164,7 +160,7 @@ class TestCustomer(unittest.TestCase):
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             Customer.modify_customer("C001", email="new@mail.com")
             customers = _load_customers()
-        self.assertEqual(customers["C001"]["first_name"], "Allan")
+        self.assertEqual(customers["C001"]["name"], "Allan")
         self.assertEqual(customers["C001"]["phone"], "5555555555")
     
     def test_display_customer_returns_customer_object(self):

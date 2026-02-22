@@ -1,6 +1,6 @@
 ============================================================
   Quality Analysis Report — Reservation System
-  Generated : sábado, 21 de febrero de 2026, 18:01:18 CST
+  Generated : sábado, 21 de febrero de 2026, 18:07:17 CST
   Target    : src/
 ============================================================
 Flake8 : FAIL — 42 issue(s)

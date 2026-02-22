@@ -859,7 +859,7 @@ Hotel Information:
 [WARNING] Customers file is being loaded...
 [WARNING] Reserving room in Hotel with ID'H002' for Reservation with ID 'R002'.......
 ----------------------------------------------------------------------
-Ran 52 tests in 0.081s
+Ran 52 tests in 0.080s
 
 OK
 
