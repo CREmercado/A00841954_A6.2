@@ -19,7 +19,7 @@ from .utils.constants import (
 def _load_hotels():
     """Load hotels from the JSON file."""
     return load_json(HOTELS_FILE, "Hotels")
-    
+
 
 def _save_hotels(hotels):
     """Save hotels dictionary to the JSON file."""
@@ -27,6 +27,7 @@ def _save_hotels(hotels):
 
 
 class Hotel:
+    """Hotel class representing a hotel in the reservation system."""
 
     def __init__(self, hotel_id, name, city, total_rooms):
         """Initialize a Hotel."""
@@ -36,7 +37,7 @@ class Hotel:
         self.total_rooms = total_rooms
         self.available_rooms = total_rooms
         self.reservations = []
-    
+
     def to_dict(self):
         """Hotel to a dictionary."""
         return {
@@ -57,7 +58,8 @@ class Hotel:
             city=data["city"],
             total_rooms=data["total_rooms"],
         )
-        hotel.available_rooms = data.get("available_rooms", data["total_rooms"])
+        hotel.available_rooms = data.get("available_rooms",
+                                         data["total_rooms"])
         hotel.reservations = data.get("reservations", [])
         return hotel
 
@@ -73,7 +75,7 @@ class Hotel:
         hotels[hotel_id] = hotel.to_dict()
         _save_hotels(hotels)
         return hotel
-    
+
     @staticmethod
     def delete_hotel(hotel_id):
         """Delete hotel."""
@@ -123,7 +125,7 @@ class Hotel:
               f"{data['available_rooms']} available")
         print(f"  - Reservations  : {data['reservations']}")
         return Hotel.from_dict(data)
-    
+
     @staticmethod
     def reserve_room(hotel_id, reservation_id):
         """Reserve a hotel room."""
@@ -135,30 +137,32 @@ class Hotel:
             return False
         hotel = hotels[hotel_id]
         if hotel["available_rooms"] <= 0:
-            print(f"{ERROR_PREFIX} No available rooms in Hotel with ID '{hotel_id}'.")
+            print(f"{ERROR_PREFIX} No available rooms in Hotel with "
+                  f"ID '{hotel_id}'.")
             return False
         if reservation_id in hotel["reservations"]:
-            print(f"{ERROR_PREFIX} Reservation '{reservation_id}' already exists "
+            print(f"{ERROR_PREFIX} Reservation '{reservation_id}' "
+                  "already exists "
                   f"in hotel '{hotel_id}'.")
             return False
         hotel["available_rooms"] -= 1
         hotel["reservations"].append(reservation_id)
         _save_hotels(hotels)
         return True
-    
+
     @staticmethod
     def cancel_room_reservation(hotel_id, reservation_id):
         """Cancel hotel room reservation."""
-        print(f"{WARNING_PREFIX} Canceling Reservation with ID '{reservation_id}' "
-              f"in Hotel with ID '{hotel_id}'...")
+        print(f"{WARNING_PREFIX} Canceling Reservation with "
+              f"ID '{reservation_id}' in Hotel with ID '{hotel_id}'...")
         hotels = _load_hotels()
         if hotel_id not in hotels:
             print(f"{ERROR_PREFIX} Hotel with ID '{hotel_id}' not found.")
             return False
         hotel = hotels[hotel_id]
         if reservation_id not in hotel["reservations"]:
-            print(f"{ERROR_PREFIX} Reservation with ID '{reservation_id}' not found "
-                  f"in Hotel with ID '{hotel_id}'.")
+            print(f"{ERROR_PREFIX} Reservation with ID '{reservation_id}' "
+                  f"not found in Hotel with ID '{hotel_id}'.")
             return False
         hotel["reservations"].remove(reservation_id)
         hotel["available_rooms"] = min(

@@ -1,18 +1,7 @@
 Flake8 Report
-Date   : sábado, 21 de febrero de 2026, 18:20:42 CST
+Date   : sábado, 21 de febrero de 2026, 23:18:46 CST
 Target : src/
 ------------------------------------------------------------
-src/hotel.py:22:1: W293 blank line contains whitespace
-src/hotel.py:39:1: W293 blank line contains whitespace
-src/hotel.py:60:80: E501 line too long (80 > 79 characters)
-src/hotel.py:76:1: W293 blank line contains whitespace
-src/hotel.py:126:1: W293 blank line contains whitespace
-src/hotel.py:138:80: E501 line too long (86 > 79 characters)
-src/hotel.py:141:80: E501 line too long (82 > 79 characters)
-src/hotel.py:148:1: W293 blank line contains whitespace
-src/hotel.py:152:80: E501 line too long (83 > 79 characters)
-src/hotel.py:160:80: E501 line too long (85 > 79 characters)
-src/hotel.py:169:20: W292 no newline at end of file
 src/reservation.py:36:1: W293 blank line contains whitespace
 src/reservation.py:37:80: E501 line too long (83 > 79 characters)
 src/reservation.py:45:1: W293 blank line contains whitespace
@@ -29,8 +18,8 @@ src/reservation.py:138:43: W292 no newline at end of file
 src/utils/__init__.py:1:47: W292 no newline at end of file
 src/utils/constants.py:2:31: W291 trailing whitespace
 src/utils/constants.py:21:29: W292 no newline at end of file
-14    E501 line too long (80 > 79 characters)
+9     E501 line too long (83 > 79 characters)
 1     W291 trailing whitespace
-4     W292 no newline at end of file
-8     W293 blank line contains whitespace
-27
+3     W292 no newline at end of file
+3     W293 blank line contains whitespace
+16
