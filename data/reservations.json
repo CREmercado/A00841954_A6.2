@@ -3,20 +3,16 @@
         "reservation_id": "R001",
         "customer_id": "C001",
         "hotel_id": "H001",
-        "dates": {
-            "check_in": "2026-02-01", 
-            "check_out": "2026-02-05"
-        },
+        "check_in": "2026-02-01",
+        "check_out": "2026-02-05",
         "status": "active"
     },
     "R002": {
         "reservation_id": "R002",
         "customer_id": "C002",
         "hotel_id": "H002",
-        "dates": {
-            "check_in": "2026-02-10", 
-            "check_out": "2026-02-15"
-        },
+        "check_in": "2026-02-10",
+        "check_out": "2026-02-15",
         "status": "canceled"
     }
 }
