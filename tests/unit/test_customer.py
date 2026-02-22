@@ -1,8 +1,14 @@
 """
 test_customer.py - Unit tests for the Customer class.
 
-Tests cover creation, deletion, display and modification,
-including negative cases.
+This module contains unit tests that validate the behavior of the
+Customer class and its helper persistence functions.
+
+Test coverage includes:
+- Object creation and reconstruction
+- CRUD operations
+- File persistence behavior
+- Negative and edge-case scenarios
 
 Author: A00841954 Christian Erick Mercado Flores
 Date: February 2026
@@ -20,12 +26,27 @@ from src.customer import (
 
 
 class TestCustomer(unittest.TestCase):
-    """Unit tests for the Customer class and related functions."""
+    """
+    Test suite for the Customer class.
+
+    Ensures correct functionality of:
+    - Data persistence
+    - Object serialization/deserialization
+    - CRUD operations
+    - Error handling scenarios
+    """
 
     def setUp(self):
+        """
+        Prepare an isolated temporary environment for each test.
+
+        A temporary JSON file is created and injected into the module
+        using patch to avoid modifying real application data.
+        """
         self.temp_dir = tempfile.mkdtemp()
         self.temp_file = os.path.join(self.temp_dir, "customers.json")
 
+        # Pre-populate test data for repeatable test execution
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             Customer.create_customer(
                 "C001", "Allan Flores", "aflores@mail.com", "5555555555"
@@ -38,7 +59,12 @@ class TestCustomer(unittest.TestCase):
             )
 
     def test_save_and_load_customers(self):
-        """Customers saved and reloaded match original data."""
+        """
+        Verify that customers saved to file can be reloaded correctly.
+
+        Confirms that _save_customers and _load_customers preserve
+        data integrity during serialization/deserialization.
+        """
         data = {
             "C004": {
                 "customer_id": "C004",
@@ -53,7 +79,12 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(loaded, data)
 
     def test_save_customers_ioerror_prints_error(self):
-        """[NEGATIVE] _save_customers handles IOError when saving file."""
+        """
+        [NEGATIVE] Ensure _save_customers handles IOError gracefully.
+
+        Simulates a file write failure and verifies that the
+        function does not crash and emits an error message.
+        """
         data = {
             "C010": {
                 "customer_id": "C010",
@@ -70,7 +101,9 @@ class TestCustomer(unittest.TestCase):
         mock_print.assert_called()
 
     def test_init_sets_attributes(self):
-        """Customer initializes with correct attributes."""
+        """
+        Verify that the constructor correctly assigns attributes.
+        """
         customer = Customer("C005", "Edgardo Perex", "ep@mail.com", "5551234")
         self.assertEqual(customer.customer_id, "C005")
         self.assertEqual(customer.name, "Edgardo Perex")
@@ -78,24 +111,31 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(customer.phone, "5551234")
 
     def test_to_dict_values_match(self):
-        """to_dict values match the customer attributes."""
+        """
+        Ensure that to_dict returns accurate attribute mappings.
+        """
         customer = Customer("C005", "Edgardo Perex", "ep@mail.com", "5551234")
         data = customer.to_dict()
         self.assertEqual(data["customer_id"], "C005")
         self.assertEqual(data["email"], "ep@mail.com")
 
     def test_from_dict_missing_fields_raises_error(self):
-        """[NEGATIVE] from_dict raises KeyError if required fields are missing."""
+        """
+        [NEGATIVE] Verify that from_dict raises KeyError
+        when required fields are missing.
+        """
         incomplete_data = {
             "customer_id": "C010",
             "name": "NoLastName"
-            # missing email, phone
+            # Required fields intentionally omitted
         }
         with self.assertRaises(KeyError):
             Customer.from_dict(incomplete_data)
 
     def test_from_dict_creates_customer(self):
-        """from_dict correctly reconstructs a Customer object."""
+        """
+        Verify that from_dict reconstructs a valid Customer object.
+        """
         data = {
             "customer_id": "C005",
             "name": "Edgardo Perex",
@@ -108,7 +148,10 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(customer.email, "ep@mail.com")
 
     def test_create_customer_success(self):
-        """create_customer returns a Customer object on success."""
+        """
+        Verify that create_customer returns a Customer object
+        when the ID does not already exist.
+        """
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             customer = Customer.create_customer(
                 "C005", "Edgardo Perex", "ep@mail.com", "5551234"
@@ -117,7 +160,10 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(customer.customer_id, "C005")
 
     def test_create_customer_duplicate_id_returns_none(self):
-        """[NEGATIVE] create_customer returns None if customer ID already exists."""
+        """
+        [NEGATIVE] Verify that create_customer returns None
+        if the customer ID already exists.
+        """
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             result = Customer.create_customer(
                 "C001", "Other Person", "other@mail.com", "0000000"
@@ -125,7 +171,10 @@ class TestCustomer(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_create_customer_duplicate_does_not_overwrite(self):
-        """[NEGATIVE] Duplicate create_customer does not overwrite existing data."""
+        """
+        [NEGATIVE] Ensure that duplicate creation attempts
+        do not overwrite existing customer data.
+        """
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             Customer.create_customer(
                 "C001", "Allan Flores", "af@mail.com", "5551234"
@@ -137,7 +186,10 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(customers["C001"]["name"], "Allan Flores")
 
     def test_delete_customer_success(self):
-        """delete_customer returns True and removes customer from file."""
+        """
+        Verify that delete_customer removes an existing customer
+        and returns True.
+        """
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             result = Customer.delete_customer("C003")
             customers = _load_customers()
@@ -145,19 +197,28 @@ class TestCustomer(unittest.TestCase):
         self.assertNotIn("C003", customers)
 
     def test_delete_customer_nonexistent_returns_false(self):
-        """[NEGATIVE] delete_customer returns False for a non-existent customer ID."""
+        """
+        [NEGATIVE] Verify that delete_customer returns False
+        for a non-existent ID.
+        """
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             result = Customer.delete_customer("C999")
         self.assertFalse(result)
 
     def test_modify_customer_nonexistent_returns_false(self):
-        """[NEGATIVE] modify_customer returns False for a non-existent customer ID."""
+        """
+        [NEGATIVE] Verify that modify_customer returns False
+        when the customer does not exist.
+        """
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             result = Customer.modify_customer("C999", email="ghost@mail.com")
         self.assertFalse(result)
 
     def test_modify_customer_does_not_change_unspecified_fields(self):
-        """modify_customer leaves unspecified fields unchanged."""
+        """
+        Ensure that modify_customer only updates specified fields
+        and preserves other existing values.
+        """
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             Customer.modify_customer("C001", email="new@mail.com")
             customers = _load_customers()
@@ -165,20 +226,32 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(customers["C001"]["phone"], "5555555555")
 
     def test_display_customer_returns_customer_object(self):
-        """display_customer returns a Customer instance for an existing ID."""
+        """
+        Verify that display_customer returns a Customer instance
+        for an existing ID.
+        """
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             result = Customer.display_customer("C001")
         self.assertIsInstance(result, Customer)
         self.assertEqual(result.customer_id, "C001")
 
     def test_display_customer_nonexistent_returns_none(self):
-        """[NEGATIVE] display_customer returns None for a non-existent customer ID."""
+        """
+        [NEGATIVE] Verify that display_customer returns None
+        when the ID does not exist.
+        """
         with patch("src.customer.CUSTOMERS_FILE", self.temp_file):
             result = Customer.display_customer("C999")
         self.assertIsNone(result)
 
     def test_load_customers_with_corrupted_file(self):
-        """[NEGATIVE] _load_customers handles corrupted JSON file."""
+        """
+        [NEGATIVE] Verify that _load_customers handles
+        corrupted JSON content gracefully.
+
+        The function should return an empty dictionary
+        instead of raising an exception.
+        """
         with open(self.temp_file, "w", encoding="utf-8") as f:
             f.write("INVALID JSON")
 
