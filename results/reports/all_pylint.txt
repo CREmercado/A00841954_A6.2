@@ -1,0 +1,37 @@
+Pylint Report
+Date   : sábado, 21 de febrero de 2026, 18:01:18 CST
+Target : src/
+------------------------------------------------------------
+************* Module src
+src/__init__.py:1:0: C0304: Final newline missing (missing-final-newline)
+************* Module src.reservation
+src/reservation.py:36:0: C0303: Trailing whitespace (trailing-whitespace)
+src/reservation.py:45:0: C0303: Trailing whitespace (trailing-whitespace)
+src/reservation.py:56:0: C0303: Trailing whitespace (trailing-whitespace)
+src/reservation.py:138:0: C0304: Final newline missing (missing-final-newline)
+src/reservation.py:35:0: C0115: Missing class docstring (missing-class-docstring)
+src/reservation.py:37:4: R0913: Too many arguments (6/5) (too-many-arguments)
+src/reservation.py:37:4: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
+src/reservation.py:80:20: W0212: Access to a protected member _load_customers of a client class (protected-access)
+************* Module src.customer
+src/customer.py:59:0: C0303: Trailing whitespace (trailing-whitespace)
+src/customer.py:103:0: C0303: Trailing whitespace (trailing-whitespace)
+src/customer.py:118:0: C0304: Final newline missing (missing-final-newline)
+src/customer.py:29:0: C0115: Missing class docstring (missing-class-docstring)
+src/customer.py:31:4: R0913: Too many arguments (6/5) (too-many-arguments)
+src/customer.py:31:4: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
+************* Module src.hotel
+src/hotel.py:22:0: C0303: Trailing whitespace (trailing-whitespace)
+src/hotel.py:39:0: C0303: Trailing whitespace (trailing-whitespace)
+src/hotel.py:76:0: C0303: Trailing whitespace (trailing-whitespace)
+src/hotel.py:126:0: C0303: Trailing whitespace (trailing-whitespace)
+src/hotel.py:148:0: C0303: Trailing whitespace (trailing-whitespace)
+src/hotel.py:169:0: C0304: Final newline missing (missing-final-newline)
+src/hotel.py:29:0: C0115: Missing class docstring (missing-class-docstring)
+************* Module src.utils.constants
+src/utils/constants.py:21:0: C0304: Final newline missing (missing-final-newline)
+************* Module src.utils.__init__
+src/utils/__init__.py:1:0: C0304: Final newline missing (missing-final-newline)
+
+------------------------------------------------------------------
+Your code has been rated at 9.09/10 (previous run: 9.09/10, +0.00)
