@@ -13,25 +13,26 @@ import tempfile
 import unittest
 from unittest.mock import patch
 from src.hotel import (
-    Hotel, 
-    _load_hotels, 
+    Hotel,
+    _load_hotels,
     _save_hotels
 )
 
 
 class TestHotel(unittest.TestCase):
+    """Test suite for the Hotel class and its persistence functions."""
 
     def setUp(self):
         self.temp_dir = tempfile.mkdtemp()
         self.temp_file = os.path.join(self.temp_dir, "hotels.json")
-        
+
         with patch("src.hotel.HOTELS_FILE", self.temp_file):
             Hotel.create_hotel("H001", "Grand Plaza", "New York", 50)
             Hotel.create_hotel("H002", "Pacific Ocean View", "Los Angeles", 30)
             Hotel.create_hotel("H003", "Mision", "San Diego", 2)
             Hotel.reserve_room("H001", "R001")
             Hotel.reserve_room("H002", "R002")
-    
+
     def test_save_and_load_hotels(self):
         """Hotels saved and reloaded match original data."""
         hotels_data = {
@@ -103,14 +104,14 @@ class TestHotel(unittest.TestCase):
         self.assertEqual(hotel.hotel_id, "H005")
         self.assertEqual(hotel.available_rooms, 18)
         self.assertEqual(hotel.reservations, ["R003"])
-        
+
     def test_create_hotel_success(self):
         """create_hotel returns a Hotel object on success."""
         with patch("src.hotel.HOTELS_FILE", self.temp_file):
             hotel = Hotel.create_hotel("H005", "City Express", "Denver", 20)
         self.assertIsNotNone(hotel)
         self.assertEqual(hotel.hotel_id, "H005")
-    
+
     def test_create_hotel_duplicate_id_returns_none(self):
         """[NEGATIVE] create_hotel returns None if hotel ID already exists."""
         with patch("src.hotel.HOTELS_FILE", self.temp_file):
@@ -124,7 +125,7 @@ class TestHotel(unittest.TestCase):
             hotels = _load_hotels()
         self.assertTrue(result)
         self.assertNotIn("H003", hotels)
-    
+
     def test_delete_hotel_nonexistent_returns_false(self):
         """[NEGATIVE] delete_hotel returns False for a non-existent hotel ID."""
         with patch("src.hotel.HOTELS_FILE", self.temp_file):
@@ -157,7 +158,7 @@ class TestHotel(unittest.TestCase):
         with patch("src.hotel.HOTELS_FILE", self.temp_file):
             result = Hotel.display_hotel("H999")
         self.assertIsNone(result)
-    
+
     def test_reserve_room_success(self):
         """reserve_room decrements available_rooms and appends reservation ID."""
         with patch("src.hotel.HOTELS_FILE", self.temp_file):
@@ -166,7 +167,7 @@ class TestHotel(unittest.TestCase):
         self.assertTrue(result)
         self.assertEqual(hotels["H003"]["available_rooms"], 1)
         self.assertIn("R001", hotels["H003"]["reservations"])
-    
+
     def test_reserve_room_hotel_not_found(self):
         """[NEGATIVE] reserve_room returns False when hotel ID does not exist."""
         with patch("src.hotel.HOTELS_FILE", self.temp_file):
@@ -180,7 +181,7 @@ class TestHotel(unittest.TestCase):
             Hotel.reserve_room("H003", "R004")
             result = Hotel.reserve_room("H003", "R005")
         self.assertFalse(result)
-    
+
     def test_reserve_room_duplicate_reservation_id(self):
         """[NEGATIVE] reserve_room returns False for a duplicate reservation ID."""
         with patch("src.hotel.HOTELS_FILE", self.temp_file):
@@ -212,7 +213,7 @@ class TestHotel(unittest.TestCase):
 
     def test_load_hotels_with_corrupted_file(self):
         """[NEGATIVE] _load_hotels handles corrupted JSON file."""
-        with open(self.temp_file, "w") as f:
+        with open(self.temp_file, "w", encoding="utf-8") as f:
             f.write("INVALID JSON")
 
         with patch("src.hotel.HOTELS_FILE", self.temp_file):
