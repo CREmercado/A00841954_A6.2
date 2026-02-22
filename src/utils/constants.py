@@ -1,5 +1,5 @@
 """
-constants.py - Constants class 
+constants.py - Constants class
 
 Centralized constants used across the project.
 This module prevents duplication of literal values and ensures

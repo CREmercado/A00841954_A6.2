@@ -81,15 +81,15 @@ echo "------------------------------------------------------------"
 
 if require_tool flake8 flake8; then
     FLAKE8_OUT=$(flake8 "$TARGET" \
-        --statistics \
-        --count 2>&1 || true)
+    --statistics \
+    --count 2>&1 || true)
 
-    if [ -z "$FLAKE8_OUT" ]; then
+    if [ "$FLAKE8_OUT" = "0" ]; then
         echo -e "${GREEN}No flake8 issues found.${RESET}" | tee -a "$FLAKE8_REPORT"
         echo "Flake8 : PASS — 0 issues" >> "$SUMMARY_FILE"
     else
         echo "$FLAKE8_OUT" | tee -a "$FLAKE8_REPORT"
-        ISSUE_COUNT=$(echo "$FLAKE8_OUT" | grep -c "^" || true)
+        ISSUE_COUNT="$FLAKE8_OUT"
         echo -e "${RED}Issues found: $ISSUE_COUNT${RESET}"
         echo "Flake8 : FAIL — $ISSUE_COUNT issue(s)" >> "$SUMMARY_FILE"
         GLOBAL_EXIT=1

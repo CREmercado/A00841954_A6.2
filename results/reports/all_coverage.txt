@@ -858,7 +858,7 @@ Hotel Information:
 [WARNING] Customers file is being loaded...
 [WARNING] Reserving room in Hotel with ID'H002' for Reservation with ID 'R002'.......
 ----------------------------------------------------------------------
-Ran 52 tests in 0.076s
+Ran 52 tests in 0.083s
 
 OK
 
@@ -1149,14 +1149,14 @@ Reservation Information:
 Name                             Stmts   Miss  Cover   Missing
 --------------------------------------------------------------
 src/__init__.py                      0      0   100%
-src/customer.py                     66      2    97%   183, 189
+src/customer.py                     70      2    97%   183, 189
 src/hotel.py                       107      2    98%   197, 200
-src/reservation.py                  75      2    97%   89, 91
+src/reservation.py                  73      2    97%   170, 172
 src/utils/__init__.py                0      0   100%
 src/utils/constants.py               8      0   100%
 src/utils/file_manager.py           21      0   100%
-tests/unit/test_customer.py         99      1    99%   191
-tests/unit/test_hotel.py           132      1    99%   224
-tests/unit/test_reservation.py     111      1    99%   219
+tests/unit/test_customer.py         99      1    99%   265
+tests/unit/test_hotel.py           132      1    99%   336
+tests/unit/test_reservation.py     111      1    99%   325
 --------------------------------------------------------------
-TOTAL                              619      9    99%
+TOTAL                              621      9    99%

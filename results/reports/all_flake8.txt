@@ -1,25 +1,5 @@
 Flake8 Report
-Date   : sábado, 21 de febrero de 2026, 23:28:27 CST
+Date   : domingo, 22 de febrero de 2026, 01:13:50 CST
 Target : src/
 ------------------------------------------------------------
-src/reservation.py:36:1: W293 blank line contains whitespace
-src/reservation.py:37:80: E501 line too long (83 > 79 characters)
-src/reservation.py:45:1: W293 blank line contains whitespace
-src/reservation.py:56:1: W293 blank line contains whitespace
-src/reservation.py:71:80: E501 line too long (97 > 79 characters)
-src/reservation.py:73:80: E501 line too long (94 > 79 characters)
-src/reservation.py:74:80: E501 line too long (87 > 79 characters)
-src/reservation.py:77:80: E501 line too long (91 > 79 characters)
-src/reservation.py:82:80: E501 line too long (80 > 79 characters)
-src/reservation.py:103:80: E501 line too long (97 > 79 characters)
-src/reservation.py:106:80: E501 line too long (86 > 79 characters)
-src/reservation.py:111:80: E501 line too long (86 > 79 characters)
-src/reservation.py:138:43: W292 no newline at end of file
-src/utils/__init__.py:1:47: W292 no newline at end of file
-src/utils/constants.py:2:31: W291 trailing whitespace
-src/utils/constants.py:21:29: W292 no newline at end of file
-9     E501 line too long (83 > 79 characters)
-1     W291 trailing whitespace
-3     W292 no newline at end of file
-3     W293 blank line contains whitespace
-16
+[0;32mNo flake8 issues found.[0m
